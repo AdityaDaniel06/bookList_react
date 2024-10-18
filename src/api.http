@@ -1,0 +1,26 @@
+GET http://localhost:3001/books HTTP/1.1
+Content-Type: application/json
+
+###
+POST http://localhost:3001/books HTTP/1.1
+Content-Type: application/json
+
+{
+     "title": "Dark Tower",
+    "author": "abc",
+    "publicationYear": 1990
+}
+
+###
+PUT  http://localhost:3001/books/1 HTTP/1.1
+Content-Type: application/json
+
+{
+    "title": "Harry Potter and the Philosopher's Stone",
+    "author": "J.K. Rowling",
+    "publicationYear": 1997
+}
+###
+
+DELETE http://localhost:3001/books/1 HTTP/1.1
+Content-Type: application/json   
