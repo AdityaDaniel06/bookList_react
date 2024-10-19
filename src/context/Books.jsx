@@ -1,17 +1,53 @@
+import axios from "axios";
 import { createContext, useState } from "react";
-
 const BooksContext = createContext();
 // Custom Provider
 function Provider({ children }) {
-  const [count, setCount] = useState(5);
+  const [books, setBooks] = useState([]); // root state , will use bookCreate Component to add values in thr array
 
-  // object  we want to use all over the application
+  const fetchBooks = async () => {
+    const resp = await axios.get("http://localhost:3000/books");
+    setBooks(resp.data); // update the state with new array of books
+  };
+
+  // createBook event handler
+  const createBook = async (title) => {
+    const res = await axios.post("http://localhost:3000/books", {
+      title,
+    });
+    // console.log(res);
+
+    const updatedBooks = [...books, res.data];
+    setBooks(updatedBooks); // update the state with new array of books
+  };
+
+  const deleteBookById = async (id) => {
+    const resp = await axios.delete(`http://localhost:3000/books/${id}`);
+
+    const updatedBooks = books.filter((book) => book.id !== id);
+    setBooks(updatedBooks); // update the state with new array of books
+  };
+
+  const editBookById = async (id, newTitle) => {
+    const resp = await axios.put(`http://localhost:3000/books/${id}`, {
+      title: newTitle,
+    });
+    const updatedBooks = books.map((book) => {
+      if (book.id === id) {
+        return { ...book, ...resp.data };
+      }
+
+      return book;
+    });
+
+    setBooks(updatedBooks);
+  };
   const valueToShare = {
-    count: count,
-    incrementCount: () => {
-      // method that changes the 'count
-      setCount(count + 1);
-    },
+    books,
+    deleteBookById,
+    editBookById,
+    createBook,
+    fetchBooks,
   };
 
   return (
